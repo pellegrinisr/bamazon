@@ -29,11 +29,11 @@ function showAllRows() {
                 {
                     name: 'productID',
                     message: 'Which product would you like to buy? '
-                },
-                {
-                    name: 'quantity',
-                    message: 'How many would you like to buy? '
                 }
+                // {
+                //     name: 'quantity',
+                //     message: 'How many would you like to buy? '
+                // }
             ]).then(function(reply) {
                 var x = 0;
                 var isFound = false;
@@ -45,45 +45,50 @@ function showAllRows() {
                     }
                 }
                 if (isFound) {
-                    var quantInt = parseInt(reply.quantity);
-                    if (!isNaN(quantInt)) {
-                        connection.query(
-                            'SELECT stock_quantity FROM products WHERE item_id = ?',
-                            reply.productID,
-                            function(error, res) {
-                                if (error) throw error;
-                                if (res[0].stock_quantity >= reply.quantity) {
-                                    var newQuant = parseInt(res[0].stock_quantity) - parseInt(reply.quantity);
-                                    connection.query(
-                                        'UPDATE products SET stock_quantity = ? WHERE item_id = ?',
-                                        [newQuant, reply.productID],
-                                        function(error, updateRes) {
-                                            if (error) throw error;
-                                            console.log(updateRes.message);
-                                            var total;
-                                            connection.query(
-                                                'SELECT price FROM products WHERE item_id = ?',
-                                                reply.productID,
-                                                function(error, res) {
-                                                    if (error) throw error;
-                                                    total = parseFloat(res[0].price) * parseInt(reply.quantity); 
-                                                    console.log('Thank you for your purchase of $' + total);
-                                                    //showAllRows();
-                                                    promptAgain();
-                                                }
-                                            ); 
-                                        }
-                                    );
-                                } else {
-                                    console.log('\nInsufficient Quantity.\n');
-                                    showAllRows();
+                    inquirer.prompt({
+                        name: 'quantity',
+                        message: 'How many would you like to buy? '
+                    }).then(function(replyQuant) {
+                        var quantInt = parseInt(replyQuant.quantity);
+                        if (!isNaN(quantInt)) {
+                            connection.query(
+                                'SELECT stock_quantity FROM products WHERE item_id = ?',
+                                reply.productID,
+                                function(error, res) {
+                                    if (error) throw error;
+                                    if (res[0].stock_quantity >= replyQuant.quantity) {
+                                        var newQuant = parseInt(res[0].stock_quantity) - parseInt(replyQuant.quantity);
+                                        connection.query(
+                                            'UPDATE products SET stock_quantity = ? WHERE item_id = ?',
+                                            [newQuant, reply.productID],
+                                            function(error, updateRes) {
+                                                if (error) throw error;
+                                                console.log(updateRes.message);
+                                                var total;
+                                                connection.query(
+                                                    'SELECT price FROM products WHERE item_id = ?',
+                                                    reply.productID,
+                                                    function(error, res) {
+                                                        if (error) throw error;
+                                                        total = parseFloat(res[0].price) * parseInt(replyQuant.quantity); 
+                                                        console.log('Thank you for your purchase of $' + total);
+                                                        //showAllRows();
+                                                        promptAgain();
+                                                    }
+                                                ); 
+                                            }
+                                        );
+                                    } else {
+                                        console.log('\nInsufficient Quantity.\n');
+                                        showAllRows();
+                                    }
                                 }
-                            }
-                        );
-                    } else {
-                        console.log('\nError. Invalid quantity.\n');
-                        showAllRows();
-                    }
+                            );
+                        } else {
+                            console.log('\nError. Invalid quantity.\n');
+                            showAllRows();
+                        }
+                    })
                 } else {
                     console.log("\nI'm sorry, product id #" + reply.productID + ' was not found in the inventory.');
                     console.log('Please select another product to purchase.\n');
