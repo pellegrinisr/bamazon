@@ -66,16 +66,12 @@ function viewLowInventory() {
 }
 
 function addToInventory() {
-    inquirer.prompt([
+    inquirer.prompt(
         {
             name: 'itemNum', 
             message: 'Enter the item number you wish to update: '
-        },
-        {
-            name: 'quant',
-            message: 'Enter the quantity to be added: '
         }
-    ]).then(function(response) {
+    ).then(function(response) {
         connection.query(
             'SELECT * FROM products',
             function(error, data) {
@@ -90,29 +86,34 @@ function addToInventory() {
                     }
                 }
                 if (isFound) {
-                    var quantInt = parseInt(response.quant);
-                    if (!isNaN(quantInt)) {
-                        connection.query(
-                            'SELECT stock_quantity FROM products WHERE item_id = ?',
-                            response.itemNum,
-                            function(error, res) {
-                                if (error) throw error;
-                                var newQuant = parseInt(res[0].stock_quantity) + quantInt;
-                                connection.query(
-                                    'UPDATE products SET stock_quantity = ? WHERE item_id = ?',
-                                    [newQuant, response.itemNum],
-                                    function(error, data) {
-                                        if (error) throw error;
-                                        console.log(data.message);
-                                        initialPrompt();
-                                    }
-                                );
-                            }
-                        );
-                    } else {
-                        console.log('\nError. Invalid Quantity.\n');
-                        addToInventory();
-                    }
+                    inquirer.prompt({
+                        name: 'quant',
+                        message: 'Enter the quantity to be added: ' 
+                    }).then(function(responseQuant) {
+                        var quantInt = parseInt(responseQuant.quant);
+                        if (!isNaN(quantInt)) {
+                            connection.query(
+                                'SELECT stock_quantity FROM products WHERE item_id = ?',
+                                response.itemNum,
+                                function(error, res) {
+                                    if (error) throw error;
+                                    var newQuant = parseInt(res[0].stock_quantity) + quantInt;
+                                    connection.query(
+                                        'UPDATE products SET stock_quantity = ? WHERE item_id = ?',
+                                        [newQuant, response.itemNum],
+                                        function(error, data) {
+                                            if (error) throw error;
+                                            console.log(data.message);
+                                            initialPrompt();
+                                        }
+                                    );
+                                }
+                            );
+                        } else {
+                            console.log('\nError. Invalid Quantity.\n');
+                            addToInventory();
+                        }
+                    });
                 } else {
                     console.log("\nI'm sorry, product id #" + response.itemNum + ' was not found in the inventory.')
                     console.log('Please select another product.');
@@ -124,5 +125,24 @@ function addToInventory() {
 }
 
 function addNewProduct() {
-    
+    inquirer.prompt([
+        {
+            name: 'name',
+            message: 'Enter information about the new product\nName: '
+        },
+        {
+            name: 'department',
+            message: 'Department: ',
+        },
+        {
+            name: 'price',
+            message: 'Price'
+        },
+        {
+            name: 'quantity',
+            message: 'Quantity: '
+        }
+    ]).then(function(response) {
+        
+    })
 }
