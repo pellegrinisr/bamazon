@@ -21,19 +21,15 @@ function showAllRows() {
         function(error, response) {
             if (error) throw error;
             //console.log(response);
-            console.log('item_id', '|', 'product_name', '|', 'department_name', '|', 'price', '|', 'stock_quantity');
+            console.log('item_id', '|', 'product_name', '|', 'department_name', '|', 'price', '|', 'stock_quantity', '|', 'product_sales');
             for (var i = 0; i < response.length; i++) {
-                console.log(response[i].item_id + ' | ' + response[i].product_name + ' | ' + response[i].department_name + ' | ' + response[i].price +  ' | ' + response[i].stock_quantity);
+                console.log(response[i].item_id + ' | ' + response[i].product_name + ' | ' + response[i].department_name + ' | ' + response[i].price +  ' | ' + response[i].stock_quantity + ' | ' + response[i].product_sales);
             }
             inquirer.prompt([
                 {
                     name: 'productID',
                     message: 'Which product would you like to buy? '
                 }
-                // {
-                //     name: 'quantity',
-                //     message: 'How many would you like to buy? '
-                // }
             ]).then(function(reply) {
                 var x = 0;
                 var isFound = false;
@@ -72,8 +68,15 @@ function showAllRows() {
                                                         if (error) throw error;
                                                         total = parseFloat(res[0].price) * parseInt(replyQuant.quantity); 
                                                         console.log('Thank you for your purchase of $' + total);
-                                                        //showAllRows();
-                                                        promptAgain();
+                                                        connection.query(
+                                                            'UPDATE products SET product_sales = ? WHERE item_id = ?',
+                                                            [total, reply.productID],
+                                                            function(error, data) {
+                                                                if (error) throw error;
+                                                                console.log('product_sales updated');
+                                                                promptAgain();
+                                                            }
+                                                        );
                                                     }
                                                 ); 
                                             }
