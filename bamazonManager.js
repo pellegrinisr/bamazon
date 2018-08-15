@@ -20,7 +20,7 @@ function initialPrompt() {
         name: 'firstPrompt',
         type: 'list',
         message: 'Choose an option: ',
-        choices: ['View Products for Sale', 'View Low Inventory', 'Add to Inventory', 'Add New Product']
+        choices: ['View Products for Sale', 'View Low Inventory', 'Add to Inventory', 'Add New Product', 'Exit']
     }).then(function(response) {
         if (response.firstPrompt === 'View Products for Sale') {
             displayAllProducts();
@@ -29,7 +29,7 @@ function initialPrompt() {
         } else if (response.firstPrompt === 'Add to Inventory') {
             addToInventory();
         } else if (response.firstPrompt === 'Add New Product') {
-
+            addNewProduct();
         } else {
             console.log('Goodbye.');
             connection.end();
@@ -133,16 +133,46 @@ function addNewProduct() {
         {
             name: 'department',
             message: 'Department: ',
-        },
-        {
-            name: 'price',
-            message: 'Price'
-        },
-        {
-            name: 'quantity',
-            message: 'Quantity: '
         }
     ]).then(function(response) {
-        
+        askPrice(response.name, response.department);
+    });
+}
+
+function askPrice(name, department) {
+    inquirer.prompt({
+        name: 'price',
+        message: 'Price: '
+    }).then(function(response) {
+        var priceFloat = parseFloat(response.price);
+        if (!isNaN(priceFloat)) {
+            askQuant(name, department, priceFloat);
+        } else {
+            console.log('Error. You entered a nonnumeric price.')
+            askPrice(name, department);
+        }
     })
+}
+
+function askQuant(name, department, price) {
+    inquirer.prompt({
+        name: 'quantity',
+        message: 'Quantity: '   
+    }).then(function(reply) {
+        var quantInt = parseInt(reply.quantity);
+        if (!isNaN(quantInt)) {
+            connection.query(
+                'INSERT INTO products SET ?',
+                {product_name: name, department_name: department, price: price, stock_quantity: quantInt},
+                function(error, data) {
+                    if (error) throw error;
+                    console.log('Query performed, ' + data.affectedRows + ' row(s) affected.');
+                    initialPrompt();
+                }
+            );
+        } else {
+            console.log('Error. You entered a nonnumeric quantity');
+            askQuant(name, department, price);
+        }
+    });
 }
