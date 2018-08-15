@@ -66,16 +66,12 @@ function viewLowInventory() {
 }
 
 function addToInventory() {
-    inquirer.prompt([
+    inquirer.prompt(
         {
             name: 'itemNum', 
             message: 'Enter the item number you wish to update: '
         }
-        // {
-        //     name: 'quant',
-        //     message: 'Enter the quantity to be added: '
-        // }
-    ]).then(function(response) {
+    ).then(function(response) {
         connection.query(
             'SELECT * FROM products',
             function(error, data) {
