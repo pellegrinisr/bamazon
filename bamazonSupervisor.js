@@ -24,7 +24,7 @@ function initialPrompt() {
         if (response.initialMenu === 'View Product Sales by Department') {
             salesByDepartment();
         } else if (response.initialMenu === 'Create New Department') {
-
+            createDepartment();
         } else {
             console.log('Goodbye');
             connection.end();
@@ -35,7 +35,7 @@ function initialPrompt() {
 function salesByDepartment() {
     var myQuery = [
         'SELECT department_id, department_name, over_head_costs, SUM(product_sales) AS sales, (SUM(product_sales) - over_head_costs) AS total_profit',
-        'FROM departments JOIN products USING (department_name)',
+        'FROM departments LEFT OUTER JOIN products USING (department_name)',
         'GROUP BY department_id'
     ].join(' ');
     console.log(myQuery);
@@ -70,4 +70,32 @@ function salesByDepartment() {
             initialPrompt();
         }
     );
+}
+
+function createDepartment() {
+    inquirer.prompt([
+        {
+            name: 'deptName',
+            message: 'Please enter the department name: '
+        },
+        {
+            name: 'overheadCosts',
+            message: 'Enter the overhead costs for the department: '
+        }
+    ]).then(function(reply) {
+        if (isNaN(reply.overheadCosts)) {
+            createDepartment();
+            console.log('Error. Overhead costs must be numeric.');
+        } else {
+            connection.query(
+                'INSERT INTO departments SET ?',
+                {department_name: reply.deptName, over_head_costs: reply.overheadCosts},
+                function(error, data) {
+                    if (error) throw error;
+                    console.log('\n' + data.affectedRows + ' row(s) added to departments table\n');;
+                    initialPrompt();
+                }
+            )
+        }
+    })
 }
