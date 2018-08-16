@@ -1,6 +1,6 @@
 var inquirer = require('inquirer');
 var mysql = require('mysql');
-
+var separator = '******************************************************************************************************';
 var connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
@@ -40,12 +40,31 @@ function initialPrompt() {
 function displayAllProducts() {
     connection.query(
         'SELECT * FROM products',
-        function(error, reply) {
+        function(error, response) {
             if (error) throw error;
-            console.log('item_id', '|', 'product_name', '|', 'department_name', '|', 'price', '|', 'stock_quantity');
-            for (var i = 0; i < reply.length; i++) {
-                console.log(reply[i].item_id + ' | ' + reply[i].product_name + ' | ' + reply[i].department_name + ' | ' + reply[i].price +  ' | ' + reply[i].stock_quantity);
+            //console.log(response);
+            var name = 'product_name';
+            var price = 'price';
+            console.log('\nitem_id', '|', name.padEnd(30, ' '), '|', 'department_name', '|', price.padEnd(8, ' '), '|', 'stock_quantity', '|', 'product_sales');
+            console.log(separator);
+            for (var i = 0; i < response.length; i++) {
+                var output = [
+                    response[i].item_id.toString().padEnd(7, ' '),
+                    ' | ',
+                    response[i].product_name.padEnd(30, ' '),
+                    ' | ',
+                    response[i].department_name.padEnd(15, ' '),
+                    ' | ', 
+                    response[i].price.toString().padEnd(8, ' '),
+                    ' | ',
+                    response[i].stock_quantity.toString().padEnd(14, ' '),
+                    ' | ',
+                    response[i].product_sales
+                ].join(''); 
+                //console.log(response[i].item_id + ' | ' + response[i].product_name + ' | ' + response[i].department_name + ' | ' + response[i].price +  ' | ' + response[i].stock_quantity + ' | ' + response[i].product_sales);
+                console.log(output);
             }
+            console.log();
             initialPrompt();
         }
     );
@@ -54,15 +73,34 @@ function displayAllProducts() {
 function viewLowInventory() {
     connection.query(
         'SELECT * FROM products WHERE stock_quantity < 5',
-        function(error, res) {
+        function(error, response) {
             if (error) throw error;
-            console.log('item_id', '|', 'product_name', '|', 'department_name', '|', 'price', '|', 'stock_quantity');
-            for (var i = 0; i < res.length; i++) {
-                console.log(res[i].item_id + ' | ' + res[i].product_name + ' | ' + res[i].department_name + ' | ' + res[i].price +  ' | ' + res[i].stock_quantity);
+            //console.log(response);
+            var name = 'product_name';
+            var price = 'price';
+            console.log('\nitem_id', '|', name.padEnd(30, ' '), '|', 'department_name', '|', price.padEnd(8, ' '), '|', 'stock_quantity', '|', 'product_sales');
+            console.log(separator);
+            for (var i = 0; i < response.length; i++) {
+                var output = [
+                    response[i].item_id.toString().padEnd(7, ' '),
+                    ' | ',
+                    response[i].product_name.padEnd(30, ' '),
+                    ' | ',
+                    response[i].department_name.padEnd(15, ' '),
+                    ' | ', 
+                    response[i].price.toString().padEnd(8, ' '),
+                    ' | ',
+                    response[i].stock_quantity.toString().padEnd(14, ' '),
+                    ' | ',
+                    response[i].product_sales
+                ].join(''); 
+                //console.log(response[i].item_id + ' | ' + response[i].product_name + ' | ' + response[i].department_name + ' | ' + response[i].price +  ' | ' + response[i].stock_quantity + ' | ' + response[i].product_sales);
+                console.log(output);
             }
+            console.log();
             initialPrompt();
         }
-    )
+    );
 }
 
 function addToInventory() {
