@@ -1,5 +1,6 @@
 var inquirer = require('inquirer');
 var mysql = require('mysql');
+var separator = '*********************************************************************************';
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -38,13 +39,14 @@ function salesByDepartment() {
         'FROM departments LEFT OUTER JOIN products USING (department_name)',
         'GROUP BY department_id'
     ].join(' ');
-    console.log(myQuery);
+    // console.log(myQuery);
     connection.query(
         myQuery,
         function(error, data) {
             if (error) throw error;
-            console.log(data[0]);
+            // console.log(data[0]);
             console.log('department_id' + ' | ' + 'department_name' + ' | ' + 'over_head_costs' + ' | ' + 'product_sales' + ' | ' + 'total_profit');
+            console.log(separator);
             for (var i = 0; i < data.length; i++) {
                 var sales;
                 if (data[i].sales === null) {
@@ -86,6 +88,8 @@ function createDepartment() {
         if (isNaN(reply.overheadCosts)) {
             createDepartment();
             console.log('Error. Overhead costs must be numeric.');
+        }else if (reply.overheadCosts < 0 ) {
+            console.log('Error. Overhead costs cannot be negative.');z
         } else {
             connection.query(
                 'INSERT INTO departments SET ?',

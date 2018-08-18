@@ -32,6 +32,10 @@ After running `node bamazonCustomer.js`, the user sees a table displaying the cu
 
 The user then either enters the product number corresponding to the product he or she wants to buy.
 
+If the user enters a product id number that does not exist in the database, they will receive an error message, and will be prompted to enter the product ID again.
+
+![Customer Interface Error Pic](screenshots/customerError.png)
+
 ![Customer Interface Second Pic](screenshots/customerSecond.png)
 
 After receiving a quantity, the application calculates and displays the total order cost to the user. This data is added to the `product_sales` column in the products table of our database.  The quanity is also updated.  Finally, the user must choose whether to order additional items or exit the application.
@@ -106,3 +110,35 @@ I will now demonstrate each of the options.
 
 5. The final option in the manager interface, `Exit`, quits the program.
     ![Manager Interface Twelfth Pic](screenshots/managerTwelfth.png)
+
+
+## Demonstrating the Supervisor Interface
+
+Running the `bamazonSupervisor.js` file launches the supervisor command line tool, which allows an employee to `View Sales by Department` or to `Create New Department`.
+
+![Supervisor Interface First Pic](screenshots/supervisorFirst.png)
+
+Let's look at each of the options.
+
+1. `View Product Sales by Department`
+
+This option queries the bamazon database and outputs sales statistcs for each department.
+
+![Supervisor Interface Second Pic](screenshots/supervisorSecond.png)
+
+2. `Create New Department`
+
+This option walkes the user through a series of prompts to create a new department in the store.
+
+First, the user must enter the department name.
+
+![Supervisor Interface Third Pic](screenshots/supervisorThird.png)
+
+Next, the user enters the overhead cost for the department.
+
+![Supervisor Interface Fourth Pic](screenshots/supervisorFourth.png)
+
+After entering a value for overhead costs, the console logs the success (or failure) of the query, and the user 
+returns to the initial prompt.
+
+![Supervisor Interface Fifth Pic](screenshots/supervisorFifth.png)

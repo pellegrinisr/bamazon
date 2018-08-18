@@ -29,6 +29,12 @@ function showAllRows() {
             console.log(separator);
             for (var i = 0; i < response.length; i++) {
                 idArray.push(response[i].item_id);
+                var sales;
+                if (response[i].product_sales === null) {
+                    sales = 0;
+                } else {
+                    sales = response[i].product_sales;
+                }
                 var output = [
                     response[i].item_id.toString().padEnd(7, ' '),
                     ' | ',
@@ -40,7 +46,7 @@ function showAllRows() {
                     ' | ',
                     response[i].stock_quantity.toString().padEnd(14, ' '),
                     ' | ',
-                    response[i].product_sales.toFixed(2)
+                    sales.toFixed(2)
                 ].join(''); 
                 //console.log(response[i].item_id + ' | ' + response[i].product_name + ' | ' + response[i].department_name + ' | ' + response[i].price +  ' | ' + response[i].stock_quantity + ' | ' + response[i].product_sales);
                 console.log(output);
@@ -75,7 +81,6 @@ function getProductID(varArray) {
                 getQuantity(reply.productID);
             } else {
                 console.log("\nI'm sorry, product id #" + reply.productID + ' was not found in the inventory.');
-                console.log('Please select another product to purchase.');
                 showAllRows();
             } 
         }
