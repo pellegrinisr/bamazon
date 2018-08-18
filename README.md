@@ -91,7 +91,7 @@ I will now demonstrate each of the options.
 
     3. After entering the deparment, the user must enter the item's price.
 
-        ![Manager Interface Eigth Pic](screenshots/managerEigth.png)
+        ![Manager Interface Eighth Pic](screenshots/managerEighth.png)
 
     4. Finally, the user is asked to enter the quantity of the product being added to the inventory.
 
