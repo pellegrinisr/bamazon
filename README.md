@@ -105,4 +105,4 @@ I will now demonstrate each of the options.
         ![Manager Interface Eleventh Pic](screenshots/managerEleventh.png)
 
 5. The final option in the manager interface, `Exit`, quits the program.
-    ![Manager Interface Twelfth Pic])(screenshots/managerTwelfth.png)
+    ![Manager Interface Twelfth Pic](screenshots/managerTwelfth.png)
