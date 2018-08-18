@@ -55,11 +55,11 @@ function displayAllProducts() {
                     ' | ',
                     response[i].department_name.padEnd(15, ' '),
                     ' | ', 
-                    response[i].price.toString().padEnd(8, ' '),
+                    response[i].price.toFixed(2).padEnd(8, ' '),
                     ' | ',
                     response[i].stock_quantity.toString().padEnd(14, ' '),
                     ' | ',
-                    response[i].product_sales
+                    response[i].product_sales.toFixed(2)
                 ].join(''); 
                 //console.log(response[i].item_id + ' | ' + response[i].product_name + ' | ' + response[i].department_name + ' | ' + response[i].price +  ' | ' + response[i].stock_quantity + ' | ' + response[i].product_sales);
                 console.log(output);
@@ -88,11 +88,11 @@ function viewLowInventory() {
                     ' | ',
                     response[i].department_name.padEnd(15, ' '),
                     ' | ', 
-                    response[i].price.toString().padEnd(8, ' '),
+                    response[i].price.toFixed(2).padEnd(8, ' '),
                     ' | ',
                     response[i].stock_quantity.toString().padEnd(14, ' '),
                     ' | ',
-                    response[i].product_sales
+                    response[i].product_sales.toFixed(2)
                 ].join(''); 
                 //console.log(response[i].item_id + ' | ' + response[i].product_name + ' | ' + response[i].department_name + ' | ' + response[i].price +  ' | ' + response[i].stock_quantity + ' | ' + response[i].product_sales);
                 console.log(output);
