@@ -48,6 +48,12 @@ function displayAllProducts() {
             console.log('\nitem_id', '|', name.padEnd(30, ' '), '|', 'department_name', '|', price.padEnd(8, ' '), '|', 'stock_quantity', '|', 'product_sales');
             console.log(separator);
             for (var i = 0; i < response.length; i++) {
+                var sales;
+                if (response[i].product_sales === null) {
+                    sales = 0;
+                } else {
+                    sales = response[i].product_sales;
+                }
                 var output = [
                     response[i].item_id.toString().padEnd(7, ' '),
                     ' | ',
@@ -59,7 +65,7 @@ function displayAllProducts() {
                     ' | ',
                     response[i].stock_quantity.toString().padEnd(14, ' '),
                     ' | ',
-                    response[i].product_sales.toFixed(2)
+                    sales.toFixed(2)
                 ].join(''); 
                 //console.log(response[i].item_id + ' | ' + response[i].product_name + ' | ' + response[i].department_name + ' | ' + response[i].price +  ' | ' + response[i].stock_quantity + ' | ' + response[i].product_sales);
                 console.log(output);
@@ -81,6 +87,12 @@ function viewLowInventory() {
             console.log('\nitem_id', '|', name.padEnd(30, ' '), '|', 'department_name', '|', price.padEnd(8, ' '), '|', 'stock_quantity', '|', 'product_sales');
             console.log(separator);
             for (var i = 0; i < response.length; i++) {
+                var sales;
+                if (response[i].product_sales === null) {
+                    sales = 0;
+                } else {
+                    sales = response[i].product_sales;
+                }
                 var output = [
                     response[i].item_id.toString().padEnd(7, ' '),
                     ' | ',
@@ -92,7 +104,7 @@ function viewLowInventory() {
                     ' | ',
                     response[i].stock_quantity.toString().padEnd(14, ' '),
                     ' | ',
-                    response[i].product_sales.toFixed(2)
+                    sales.toFixed(2)
                 ].join(''); 
                 //console.log(response[i].item_id + ' | ' + response[i].product_name + ' | ' + response[i].department_name + ' | ' + response[i].price +  ' | ' + response[i].stock_quantity + ' | ' + response[i].product_sales);
                 console.log(output);
@@ -129,7 +141,7 @@ function addToInventory() {
                         message: 'Enter the quantity to be added: ' 
                     }).then(function(responseQuant) {
                         var quantInt = parseInt(responseQuant.quant);
-                        if (!isNaN(quantInt)) {
+                        if (!isNaN(quantInt) && quantInt >= 0) {
                             connection.query(
                                 'SELECT stock_quantity FROM products WHERE item_id = ?',
                                 response.itemNum,
@@ -198,7 +210,7 @@ function askQuant(name, department, price) {
         message: 'Quantity: '   
     }).then(function(reply) {
         var quantInt = parseInt(reply.quantity);
-        if (!isNaN(quantInt)) {
+        if (!isNaN(quantInt) && quantInt >= 0) {
             connection.query(
                 'INSERT INTO products SET ?',
                 {product_name: name, department_name: department, price: price, stock_quantity: quantInt},

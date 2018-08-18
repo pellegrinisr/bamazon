@@ -65,15 +65,44 @@ After executing the application, the user is presented with five options.
 
 I will now demonstrate each of the options.  
 
-* The first option, `View Products for Sale`, simply displays the current inventory to the screen. Note how the initial menu is again displayed.
+1. The first option, `View Products for Sale`, simply displays the current inventory to the screen. Note how the initial menu is again displayed.
 
 ![Manager Interface Second Pic](screenshots/managerSecond.png)
 
-* The second option, `View Low Inventory`, displays all products with an inventory count lower than 5.
+2. The second option, `View Low Inventory`, displays all products with an inventory count lower than 5.
 
 ![Manager Interface Third Pic](screenshots/managerThird.png)
 
-* Using the third option, `Add to Inventory`, an employee can update an item's inventory quantity.:  
+3. Using the third option, `Add to Inventory`, an employee can update an item's inventory quantity.:  
     1. First, they are asked to enter the item number corresponding to to the product they wish to update.
 
     ![Manager Interface Fourth Pic](screenshots/managerFourth.png)
+
+    2. Second, the user enters the quantity. The intitial menu is displayed again, and the products table is updated in our database.
+
+    ![Manager Interface Fifth Pic](screenshots/managerFifth.png)
+
+4. The fourth option of the manager intterface, `Add New Product`, is fairly self explanatory.  Using this option, an employee can add a new product to the database:
+    1. First the user is prompted to enter the name of the new product. 
+        ![Manager Interface Sixth Pic](screenshots/managerSixth.png)
+    
+    2. After entering the name, the user is asked to enter the department in which the item belongs.
+        ![Manager Interface Seventh Pic](screenshots/managerSeventh.png)
+
+    3. After entering the deparment, the user must enter the item's price.
+
+        ![Manager Interface Eigth Pic](screenshots/managerEigth.png)
+
+    4. Finally, the user is asked to enter the quantity of the product being added to the inventory.
+
+        ![Manager Interface Ninth Pic](screenshots/managerNinth.png)
+
+    5. Entering a quantity returns the success (or failure) of the query, and returns the user to the intitial menu.
+
+        ![Manager Interface Tenth Pic](screenshots/managerTenth.png)
+
+    6. To verify, we can disply the product inventory again, and we will see our new item
+        ![Manager Interface Eleventh Pic](screenshots/managerEleventh.png)
+
+5. The final option in the manager interface, `Exit`, quits the program.
+    ![Manager Interface Twelfth Pic])(screenshots/managerTwelfth.png)

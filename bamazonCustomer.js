@@ -103,7 +103,7 @@ function queryQuant(id, quant) {
         id,
         function(error, res) {
             if (error) throw error;
-            if (res[0].stock_quantity >= quant) {
+            if (res[0].stock_quantity >= quant && quant >= 0) {
                 var newQuant = parseInt(res[0].stock_quantity) - parseInt(quant);
                 connection.query(
                     'UPDATE products SET stock_quantity = ? WHERE item_id = ?',
