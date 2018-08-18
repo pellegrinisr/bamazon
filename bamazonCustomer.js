@@ -1,5 +1,6 @@
 var inquirer = require('inquirer');
 var mysql = require('mysql');
+var separator = '******************************************************************************************************';
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -11,7 +12,7 @@ var connection = mysql.createConnection({
 
 connection.connect(function(error) {
     if (error) throw error;
-    console.log('Connected as id ' + connection.threadId + '\n');
+    console.log('\nConnected as id ' + connection.threadId);
     showAllRows();
 });
 
@@ -25,6 +26,7 @@ function showAllRows() {
             var price = 'price';
             var idArray = [];
             console.log('\nitem_id', '|', name.padEnd(30, ' '), '|', 'department_name', '|', price.padEnd(8, ' '), '|', 'stock_quantity', '|', 'product_sales');
+            console.log(separator);
             for (var i = 0; i < response.length; i++) {
                 idArray.push(response[i].item_id);
                 var output = [
@@ -34,11 +36,11 @@ function showAllRows() {
                     ' | ',
                     response[i].department_name.padEnd(15, ' '),
                     ' | ', 
-                    response[i].price.toString().padEnd(8, ' '),
+                    response[i].price.toFixed(2).padEnd(8, ' '),
                     ' | ',
                     response[i].stock_quantity.toString().padEnd(14, ' '),
                     ' | ',
-                    response[i].product_sales
+                    response[i].product_sales.toFixed(2)
                 ].join(''); 
                 //console.log(response[i].item_id + ' | ' + response[i].product_name + ' | ' + response[i].department_name + ' | ' + response[i].price +  ' | ' + response[i].stock_quantity + ' | ' + response[i].product_sales);
                 console.log(output);
@@ -49,27 +51,33 @@ function showAllRows() {
 }
 
 function getProductID(varArray) {
+    console.log();
     inquirer.prompt([
         {
             name: 'productID',
-            message: 'Which product would you like to buy? '
+            message: 'Which product would you like to buy? Enter 0 to Exit: '
         }
     ]).then(function(reply) {
-        var x = 0;
-        var isFound = false;
-        while (x < varArray.length && !isFound) {
-            if (parseInt(reply.productID) === varArray[x]) {
-                isFound = true;
-            } else {
-                x++;
-            }
-        }
-        if(isFound) {
-            getQuantity(reply.productID);
+        if (parseInt(reply.productID) === 0) {
+            console.log('Goodbye');
+            connection.end();
         } else {
-            console.log("\nI'm sorry, product id #" + reply.productID + ' was not found in the inventory.');
-            console.log('Please select another product to purchase.\n');
-            showAllRows();
+            var x = 0;
+            var isFound = false;
+            while (x < varArray.length && !isFound) {
+                if (parseInt(reply.productID) === varArray[x]) {
+                    isFound = true;
+                } else {
+                    x++;
+                }
+            }
+            if(isFound) {
+                getQuantity(reply.productID);
+            } else {
+                console.log("\nI'm sorry, product id #" + reply.productID + ' was not found in the inventory.');
+                console.log('Please select another product to purchase.');
+                showAllRows();
+            } 
         }
     });
 }
@@ -102,7 +110,7 @@ function queryQuant(id, quant) {
                     [newQuant, id],
                     function(error, updateRes) {
                         if (error) throw error;
-                        console.log(updateRes.message);
+                        // console.log(updateRes.message);
                         var total;
                         connection.query(
                             'SELECT price FROM products WHERE item_id = ?',
@@ -110,13 +118,13 @@ function queryQuant(id, quant) {
                             function(error, res) {
                                 if (error) throw error;
                                 total = parseFloat(res[0].price) * parseInt(quant); 
-                                console.log('Thank you for your purchase of $' + total);
+                                console.log('Thank you for your purchase of $' + total.toFixed(2));
                                 connection.query(
                                     'UPDATE products SET product_sales = ? WHERE item_id = ?',
                                     [total, id],
                                     function(error, data) {
                                         if (error) throw error;
-                                        console.log('product_sales updated');
+                                        // console.log('product_sales updated');
                                         promptAgain();
                                     }
                                 );
